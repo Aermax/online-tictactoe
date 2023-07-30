@@ -1,21 +1,27 @@
 const express = require("express")
-const app = express()
 const http = require("http")
-const server = http.createServer(app)
 const { Server } = require("socket.io")
-const io = new Server(server)
+const { v4: uuidv4 } = require('uuid');
+
+const app = express()
+const server = http.createServer(app)
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:5173'
+    }
+})
 
 const rooms = []
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/index.html', {
+        'Content-Type': 'application/javascript'
+    });
 });
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
-    // socket.on('playerInput', (board, player) => {
-    //     io.emit('boardChange', board, player)
-    // });
+    console.log('connected');
+
     socket.on('roomCreated', (roomId) => {
         if (rooms.includes(roomId)) {
             socket.join(roomId)
@@ -31,12 +37,6 @@ io.on('connection', (socket) => {
             })
         }
     })
-
-    // rooms.forEach((room) => {
-    //     socket.on('playerInput', (board, player) => {
-    //         socket.to(room).emit('boardChange', board, player)
-    //     })
-    // })
 
 });
 
