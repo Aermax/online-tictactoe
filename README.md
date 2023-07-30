@@ -24,4 +24,4 @@ The game is built with HTML, CSS, and JavaScript, and it utilizes the Socket.io 
  
 ## Acknowledgements - [Socket.io Documentation](https://socket.io/docs/) 
 
-## License This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). --- Feel free to contribute to this project by creating pull requests or reporting issues. Have fun playing Tic Tac Toe online with your friends!
+## --- Feel free to contribute to this project by creating pull requests or reporting issues. Have fun playing Tic Tac Toe online with your friends!
