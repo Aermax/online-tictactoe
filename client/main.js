@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 //const { v4: uuidv4 } = require('uuid');
 import { v4 as uuidv4 } from 'uuid'
 
-const socket = io("ws://localhost:3000");
+const socket = io("ws://xo-10iq.onrender.com");
 
 var currentPlayer = "X";
 var player;
