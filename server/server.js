@@ -22,19 +22,35 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('connected');
 
-    socket.on('roomCreated', (roomId) => {
-        if (rooms.includes(roomId)) {
-            socket.join(roomId)
-            socket.on('playerInput', (board, player) => {
-                socket.to(roomId).emit('boardChange', board, player)
+
+    socket.on('playerInput', (board, roomID) => {
+        socket.to(roomID).emit('boardChange', board)
+    })
+
+
+
+    //New Version
+
+    socket.on('roomhost', id => {
+        rooms.push(id)
+        socket.join(id)
+        io.to(socket.id).emit('roomJoined', {
+            success: true,
+            player: "X"
+        })
+        console.log("Joined to " + id)
+    })
+
+    socket.on('roomJoin', id => {
+        if (rooms.includes(id)) {
+            rooms.splice(rooms.indexOf(id), 1)
+            socket.join(id)
+            io.to(id).emit("gameStarted")
+            io.to(socket.id).emit('roomJoined', {
+                success: true,
+                player: "O"
             })
-        }
-        else {
-            rooms.push(roomId)
-            socket.join(roomId)
-            socket.on('playerInput', (board, player) => {
-                socket.to(roomId).emit('boardChange', board, player)
-            })
+            console.log("Joined to " + id)
         }
     })
 

@@ -5,15 +5,68 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>XO</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
-    <form action="">
-      <input type="text" placeholder="Create Room Or Join Room" />
-      <button>Enter</button>
-    </form>
-    <h1>Tic Tac Toe</h1>
+    <h1 class="text-5xl text-blue-500 font-bold m-2 mb-6">Tic Tac Toe</h1>
+    <div id="formDiv" class="flex items-center justify-center h-[70vh]">
+      <div>
+        <form id="form1" action="" class="m-4 flex justify-center gap-2">
+          <input
+            type="text"
+            class="rounded px-6 pb-2 pt-2.5 text-black"
+            id="exampleFormControlInput1"
+            autocomplete="off"
+            placeholder="Enter Room Code"
+          />
+
+          <button class="rounded bg-red-400 px-3 text-white">Enter</button>
+        </form>
+        <p class="text-2xl font-mono text-gray-400">Or</p>
+        <form
+          id="form2"
+          action=""
+          class="m-4 flex justify-center items-center gap-2 flex-col"
+        >
+          <button
+            type="submit"
+            class="inline-block rounded bg-red-400 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+          >
+            Generate Room Code
+          </button>
+          <div id="idDiv" class="hidden">
+            <p id="playerInfo"></p>
+            <p class="my-2 font-semibold">Share this Code with your friend</p>
+            <div class="bg-blue-400 p-2 px-2 rounded text-white gap-2 flex">
+              <div id="idTag"></div>
+              <div id="copyBtn" class="cursor-pointer relative">
+                <span class="tooltiptext" id="myTooltip"
+                  ><i class="fa-regular fa-copy"></i
+                ></span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <h1 class="text-2xl font-bold mb-2">
+      <span class="text-blue-400" id="playerTag"></span>
+    </h1>
     <div id="root"></div>
-    <h1><span id="playerTag"></span></h1>
+
+    <script>
+      function outFunc() {
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copy to clipboard";
+      }
+    </script>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

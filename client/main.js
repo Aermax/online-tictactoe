@@ -1,18 +1,61 @@
 import './style.css'
 import { io } from "socket.io-client";
+//const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid'
 
 const socket = io("ws://localhost:3000");
 
 var currentPlayer = "X";
+var player;
+var roomID;
+var loading = false
+var winplayer;
+
+function copyText() {
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = '<i class="fa-solid fa-check"></i>';
+  var copyText = document.getElementById("idTag");
+  navigator.clipboard.writeText(copyText.innerText);
+}
+
+
+
+document.querySelector('#copyBtn').onclick = copyText
+
 const input = document.querySelector("input");
-document.querySelector("form").addEventListener("submit", (e) => {
+document.querySelector("#form1").addEventListener("submit", (e) => {
   e.preventDefault();
-  socket.emit("roomCreated", input.value);
+  roomID = input.value
+  socket.emit("roomJoin", input.value);
+});
+
+socket.on('roomJoined', success => {
+  if (success.success === true) document.getElementById('playerInfo').innerText = "You are playing as " + success.player
+  player = success.player
+
+
+})
+
+socket.on("gameStarted", () => {
+  startGame()
+})
+
+
+document.querySelector('#form2').addEventListener('submit', (e) => {
+  e.preventDefault()
+  const id = uuidv4()
+  socket.emit("roomhost", id)
+  roomID = id
+  document.querySelector('#idTag').innerText = id
+  document.querySelector('#idDiv').classList.remove('hidden')
+})
+
+function startGame() {
+  document.querySelector('#formDiv').classList.add('hidden')
   createBoard(vals);
   playerInput();
-  currentPlayer = player;
   playerTag.innerText = "X's Turn";
-});
+}
 
 
 const board = document.querySelector("#root");
@@ -39,12 +82,12 @@ function createBoard(vals) {
   return true;
 }
 
-socket.on("boardChange", (newboard, player) => {
-  currentPlayer = player;
-  playerTag.innerHTML = player + "'s turn";
-  updataBoard(newboard);
+socket.on("boardChange", (newboard) => {
+  changePlayer()
+  updateBoard(newboard);
   if (checkWin(vals)) {
-    playerTag.innerHTML = currentPlayer + " Wins";
+    currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
+    playerTag.innerHTML = winplayer + " Wins";
     document.querySelectorAll(".square").forEach((elem) => {
       elem.removeEventListener("click", changeBoardIcon);
     });
@@ -56,7 +99,7 @@ socket.on("boardChange", (newboard, player) => {
   }
 });
 
-function updataBoard(board) {
+function updateBoard(board) {
   let a = 0;
   let row = document.querySelectorAll(".row");
   for (let i = 0; i < 3; i++) {
@@ -76,14 +119,15 @@ function playerInput() {
 }
 
 function changeBoardIcon(e) {
-  {
+  if (currentPlayer === player) {
     if (vals[e.target.id[1]] === " ") {
       document.querySelector(`#${e.target.id}`).innerHTML = currentPlayer;
       vals[e.target.id[1]] = currentPlayer;
       changePlayer();
-      socket.emit("playerInput", vals, currentPlayer);
+      socket.emit("playerInput", vals, roomID);
+      currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
       if (checkWin(vals)) {
-        playerTag.innerHTML = currentPlayer + " Wins";
+        playerTag.innerHTML = winplayer + " Wins";
         document.querySelectorAll(".square").forEach((elem) => {
           elem.removeEventListener("click", changeBoardIcon);
         });
@@ -93,7 +137,6 @@ function changeBoardIcon(e) {
         playerTag.innerHTML = "Its a Tie";
         return;
       }
-
       // setTimeout(() => { getcomputerMove() }, 500)
     }
   }
