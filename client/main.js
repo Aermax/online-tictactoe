@@ -1,7 +1,5 @@
 import './style.css'
 import { io } from "socket.io-client";
-//const { v4: uuidv4 } = require('uuid');
-import { v4 as uuidv4 } from 'uuid'
 
 const socket = io("https://xo-10iq.onrender.com");
 //const socket = io("http://localhost:3000");
