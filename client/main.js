@@ -4,6 +4,8 @@ import { io } from "socket.io-client";
 import { v4 as uuidv4 } from 'uuid'
 
 const socket = io("https://xo-10iq.onrender.com");
+//const socket = io("http://localhost:3000");
+
 
 var currentPlayer = "X";
 var player;
@@ -16,6 +18,15 @@ function copyText() {
   tooltip.innerHTML = '<i class="fa-solid fa-check"></i>';
   var copyText = document.getElementById("idTag");
   navigator.clipboard.writeText(copyText.innerText);
+}
+
+const makeRandomId = (length) => {
+  let result = ''
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 }
 
 
@@ -43,7 +54,7 @@ socket.on("gameStarted", () => {
 
 document.querySelector('#form2').addEventListener('submit', (e) => {
   e.preventDefault()
-  const id = uuidv4()
+  const id = makeRandomId(4)
   socket.emit("roomhost", id)
   roomID = id
   document.querySelector('#idTag').innerText = id

@@ -13,7 +13,7 @@
       referrerpolicy="no-referrer"
     />
   </head>
-  <body>
+  <body class="m-0 overflow-x-hidden w-full">
     <h1 class="text-5xl text-blue-500 font-bold m-2 mb-6">Tic Tac Toe</h1>
     <div id="formDiv" class="flex items-center justify-center h-[70vh]">
       <div>
@@ -43,12 +43,14 @@
           <div id="idDiv" class="hidden">
             <p id="playerInfo"></p>
             <p class="my-2 font-semibold">Share this Code with your friend</p>
-            <div class="bg-blue-400 p-2 px-2 rounded text-white gap-2 flex">
-              <div id="idTag"></div>
+            <div
+              class="bg-blue-400 p-2 px-2 w-full rounded text-white gap-2 flex justify-center items-center"
+            >
+              <div id="idTag" class="flex justify-center"></div>
               <div id="copyBtn" class="cursor-pointer relative">
                 <span class="tooltiptext" id="myTooltip"
-                  ><i class="fa-regular fa-copy"></i
-                ></span>
+                  ><i class="fa-regular fa-copy"></i>
+                </span>
               </div>
             </div>
           </div>
@@ -60,13 +62,6 @@
       <span class="text-blue-400" id="playerTag"></span>
     </h1>
     <div id="root"></div>
-
-    <script>
-      function outFunc() {
-        var tooltip = document.getElementById("myTooltip");
-        tooltip.innerHTML = "Copy to clipboard";
-      }
-    </script>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

@@ -8,6 +8,8 @@ body {
   text-align: center;
   background-color: black;
   color: white;
+  margin: 0px;
+  height: 100%;
 }
 
 #root {
@@ -23,12 +25,12 @@ body {
 }
 
 .square {
-  width: 180px;
-  height: 180px;
+  width: 100px;
+  aspect-ratio: 1 /1;
   background-color: rgb(0, 255, 187);
   border: 1px solid rgb(0, 0, 0);
   color: black;
-  font-size: 100px;
+  font-size: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
