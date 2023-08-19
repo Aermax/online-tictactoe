@@ -3,9 +3,11 @@
 This project is a simple online Tic Tac Toe game that allows multiplayer functionality using Socket.io.
 The game is built with HTML, CSS, and JavaScript, and it utilizes the Socket.io library to enable real-time communication between multiple players.
 
+## Live Site - [XO](https://maxo.netlify.app/)
+
 ## How to Play
 
-1. Clone the repository to your local machine. `shell git clone https://github.com/aermax/tic-tac-toe.git `
+1. Clone the repository to your local machine. `shell git clone https://github.com/aermax/online-tictactoe.git `
 2. Navigate to the project directory. `shell cd online-tictactoe `
 3. Install dependencies. `shell npm install `
 4. Start the development server. `shell npm run dev ` in both `client` and `server`
