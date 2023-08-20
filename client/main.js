@@ -53,7 +53,7 @@ socket.on("gameStarted", (id) => {
 
 document.querySelector('#form3').addEventListener('submit', (e) => {
   e.preventDefault()
-  document.getElementById('search').innerHTML = '<div class="flex justify-center items-center gap-6"><p>Search for Opponent</p><i class="fa-solid fa-magnifying-glass"></i></div >'
+  document.getElementById('search').innerText = 'Searching...'
   const id = makeRandomId(4)
   socket.emit("random", id)
   roomID = id
