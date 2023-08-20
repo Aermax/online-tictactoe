@@ -11,13 +11,15 @@ const io = new Server(server, {
 })
 
 const rooms = []
+const randomRooms = []
 
 io.on('connection', (socket) => {
-    console.log('connected');
+    //console.log('connected');
 
 
     socket.on('playerInput', (board, roomID) => {
         socket.to(roomID).emit('boardChange', board)
+        //console.log(board, roomID)
     })
 
 
@@ -31,7 +33,7 @@ io.on('connection', (socket) => {
             success: true,
             player: "X"
         })
-        console.log("Joined to " + id)
+        //console.log("Joined to " + id)
     })
 
     socket.on('roomJoin', id => {
@@ -43,8 +45,32 @@ io.on('connection', (socket) => {
                 success: true,
                 player: "O"
             })
-            console.log("Joined to " + id)
+            //console.log("Joined to " + id)
         }
+    })
+
+    socket.on("random", (roomID) => {
+        if (randomRooms[0] !== undefined && randomRooms[0] !== null) {
+            socket.join(randomRooms[0])
+            io.to(randomRooms[0]).emit("gameStarted", randomRooms[0])
+            io.to(socket.id).emit('roomJoined', {
+                success: true,
+                player: "O"
+            })
+            //console.log("roomId: " + randomRooms[0])
+
+            randomRooms[0] = undefined
+        }
+        else {
+            randomRooms[0] = roomID
+            socket.join(randomRooms[0])
+            io.to(socket.id).emit('roomJoined', {
+                success: true,
+                player: "X"
+            })
+            //console.log("roomId: " + roomID)
+        }
+
     })
 
 });

@@ -38,15 +38,27 @@ document.querySelector("#form1").addEventListener("submit", (e) => {
   socket.emit("roomJoin", input.value);
 });
 
-socket.on('roomJoined', success => {
+socket.on('roomJoined', (success) => {
   if (success.success === true) document.getElementById('playerInfo').innerText = "You are playing as " + success.player
   player = success.player
 
+  //alert("Player: " + player)
 
 })
 
-socket.on("gameStarted", () => {
+socket.on("gameStarted", (id) => {
+  roomID = id
   startGame()
+})
+
+document.querySelector('#form3').addEventListener('submit', (e) => {
+  e.preventDefault()
+  document.getElementById('search').innerHTML = '<div class="flex justify-center items-center gap-6"><p>Search for Opponent</p><i class="fa-solid fa-magnifying-glass"></i>
+</div > '
+  const id = makeRandomId(4)
+  socket.emit("random", id)
+  roomID = id
+
 })
 
 
@@ -93,6 +105,7 @@ function createBoard(vals) {
 
 socket.on("boardChange", (newboard) => {
   changePlayer()
+  //alert(currentPlayer)
   updateBoard(newboard);
   if (checkWin(vals)) {
     currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
@@ -107,6 +120,8 @@ socket.on("boardChange", (newboard) => {
     return;
   }
 });
+
+
 
 function updateBoard(board) {
   let a = 0;
