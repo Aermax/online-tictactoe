@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
         if (rooms.includes(id)) {
             rooms.splice(rooms.indexOf(id), 1)
             socket.join(id)
-            io.to(id).emit("gameStarted")
+            io.to(id).emit("gameStarted", id)
             io.to(socket.id).emit('roomJoined', {
                 success: true,
                 player: "O"
