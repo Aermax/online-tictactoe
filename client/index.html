@@ -21,7 +21,7 @@
     <div id="formDiv" class="flex items-center justify-center h-[70vh]">
       <div>
 
-        <button class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden z-10  rounded bg-red-500 px-6 pb-2 pt-2.5">Home</button>
+        <button id="restart" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden z-10  rounded bg-red-500 px-6 pb-2 pt-2.5">Home</button>
         
         <form id="form3" action="" class="m-4 flex justify-center gap-2">
           <button
@@ -94,6 +94,8 @@
       <span class="text-blue-400" id="playerTag"></span>
     </h1>
     <div id="root"></div>
-    <script type="module" src="/main.js"></script>
+    <script src="/src/utils/utils.js"></script>
+    <script src="/src/minimax.js"></script>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

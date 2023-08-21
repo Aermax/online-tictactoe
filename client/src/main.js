@@ -1,4 +1,4 @@
-import './style.css'
+import '../style.css'
 import { io } from "socket.io-client";
 
 const socket = io("https://xo-10iq.onrender.com");
@@ -43,15 +43,15 @@ document.querySelector("#form1").addEventListener("submit", (e) => {
 socket.on('roomJoined', (success) => {
   if (success.success === true) document.getElementById('playerInfo').innerText = "You are playing as " + success.player
   player = success.player
-
-  //alert("Player: " + player)
-
 })
 
 socket.on("gameStarted", (id) => {
   roomID = id
   startGame()
 })
+
+
+
 
 document.querySelector('#form4').addEventListener('submit', (e) => {
   e.preventDefault()
@@ -120,18 +120,19 @@ function createBoard(vals) {
 
 socket.on("boardChange", (newboard) => {
   changePlayer()
-  //alert(currentPlayer)
   updateBoard(newboard);
-  if (checkWin(vals)) {
+  if (checkWinner(vals)) {
     currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
     playerTag.innerHTML = winplayer + " Wins";
     document.querySelectorAll(".square").forEach((elem) => {
       elem.removeEventListener("click", changeBoardIcon);
+
     });
     return;
   }
-  if (boardIsFull(vals)) {
+  if (isBoardFull(vals)) {
     playerTag.innerHTML = "Its a Tie";
+
     return;
   }
 });
@@ -163,6 +164,8 @@ function playerInputAI() {
   });
 }
 
+//****Refactor****//
+
 function changeBoardIcon(e) {
   if (currentPlayer === player) {
     if (vals[e.target.id[1]] === " ") {
@@ -171,18 +174,19 @@ function changeBoardIcon(e) {
       changePlayer();
       socket.emit("playerInput", vals, roomID);
       currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
-      if (checkWin(vals)) {
+      if (checkWinner(vals)) {
         playerTag.innerHTML = winplayer + " Wins";
         document.querySelectorAll(".square").forEach((elem) => {
           elem.removeEventListener("click", changeBoardIcon);
+
         });
         return;
       }
-      if (boardIsFull(vals)) {
+      if (isBoardFull(vals)) {
         playerTag.innerHTML = "Its a Tie";
+
         return;
       }
-      // setTimeout(() => { getcomputerMove() }, 500)
     }
   }
 }
@@ -195,15 +199,17 @@ function changeBoardIconAI(e) {
       changePlayer();
       socket.emit("playerInput", vals, roomID);
       currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
-      if (checkWin(vals)) {
+      if (checkWinner(vals)) {
         playerTag.innerHTML = winplayer + " Wins";
         document.querySelectorAll(".square").forEach((elem) => {
           elem.removeEventListener("click", changeBoardIconAI);
+
         });
         return;
       }
-      if (boardIsFull(vals)) {
+      if (isBoardFull(vals)) {
         playerTag.innerHTML = "Its a Tie";
+
         return;
       }
       setTimeout(() => { getcomputerMove() }, 500)
@@ -219,135 +225,31 @@ function getcomputerMove() {
     vals[move] = currentPlayer;
     changePlayer();
     currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
-    if (checkWin(vals)) {
+    if (checkWinner(vals)) {
       playerTag.innerHTML = winplayer + " Wins";
       document.querySelectorAll(".square").forEach((elem) => {
         elem.removeEventListener("click", changeBoardIconAI);
+
       });
 
       return;
     }
-    if (boardIsFull(vals)) {
+    if (isBoardFull(vals)) {
       playerTag.innerHTML = "Its a Tie";
+
       return;
     }
     return
   }
-  // for (let i = 0; i < vals.length; i++) {
-  //   if (vals[i] === " ") {
-  //     document.querySelector(`#s${i}`).innerHTML = currentPlayer;
-  //     vals[i] = currentPlayer;
-  //     changePlayer();
-  //     currentPlayer === 'X' ? winplayer = 'O' : winplayer = 'X'
-  //     if (checkWin(vals)) {
-  //       playerTag.innerHTML = winplayer + " Wins";
-  //       document.querySelectorAll(".square").forEach((elem) => {
-  //         elem.removeEventListener("click", changeBoardIconAI);
-  //       });
-  //       return;
-  //     }
-  //     if (boardIsFull(vals)) {
-  //       playerTag.innerHTML = "Its a Tie";
-  //       return;
-  //     }
-  //     return
-  //   }
-  // }
 
 }
 
-//AI code
-
-function evaluateBoard(board) {
-  // Define winning combinations
-  const winningCombinations = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-    [0, 4, 8], [2, 4, 6]            // Diagonals
-  ];
-
-  // Check for wins
-  for (const combo of winningCombinations) {
-    const [a, b, c] = combo;
-    if (board[a] === AI_PLAYER && board[b] === AI_PLAYER && board[c] === AI_PLAYER) {
-      return 10; // AI wins
-    } else if (board[a] === HUMAN_PLAYER && board[b] === HUMAN_PLAYER && board[c] === HUMAN_PLAYER) {
-      return -10; // Human wins
-    }
-  }
-
-  return 0; // Draw or no winner yet
-}
 
 
 
-function minimax(board, depth, isMaximizingPlayer) {
-  if (boardIsFull(board)) {
-    return evaluateBoard(board);
-  }
 
-  if (isMaximizingPlayer) {
-    let maxEval = -Infinity;
-    for (let i = 0; i < board.length; i++) {
-      if (board[i] === ' ') {
-        board[i] = AI_PLAYER;
-        const eVal = minimax(board, depth + 1, false);
-        board[i] = ' ';
-        maxEval = Math.max(maxEval, eVal);
-      }
-    }
-    return maxEval;
-  } else {
-    let minEval = Infinity;
-    for (let i = 0; i < board.length; i++) {
-      if (board[i] === ' ') {
-        board[i] = HUMAN_PLAYER;
-        const eVal = minimax(board, depth + 1, true);
-        board[i] = ' ';
-        minEval = Math.min(minEval, eVal);
-      }
-    }
-    return minEval;
-  }
-}
 
-function findBestMove(board) {
-  let bestMove = -1;
-  let bestScore = -Infinity;
-
-  for (let i = 0; i < board.length; i++) {
-    if (board[i] === ' ') {
-      board[i] = AI_PLAYER;
-      const moveScore = minimax(board, 0, false);
-      board[i] = ' ';
-      console.log(bestMove)
-      if (moveScore > bestScore) {
-        bestScore = moveScore;
-        bestMove = i;
-      }
-    }
-  }
-
-  return bestMove;
-}
-
-function changePlayer() {
-  if (currentPlayer === "X") {
-    currentPlayer = "O";
-    playerTag.innerHTML = "O's Turn";
-  } else {
-    currentPlayer = "X";
-    playerTag.innerHTML = "X's Turn";
-  }
-}
-
-function boardIsFull(allVals) {
-  let result = allVals.includes(" ") ? false : true;
-
-  return result;
-}
-
-function checkWin(allVals) {
+function checkWinner(allVals) {
   //check horizontal
 
   if (
@@ -424,17 +326,20 @@ function checkWin(allVals) {
   return false;
 }
 
-function checkTie() {
-  if (boardIsFull(vals)) {
-    return false;
+//Change Player
+function changePlayer() {
+  if (currentPlayer === "X") {
+    currentPlayer = "O";
+    playerTag.innerHTML = "O's Turn";
+  } else {
+    currentPlayer = "X";
+    playerTag.innerHTML = "X's Turn";
   }
-  return true;
 }
 
-function changeWinSquareColor(id1, id2, id3) {
-  document.querySelector("#" + id1).style.backgroundColor = "yellow";
-  document.querySelector("#" + id2).style.backgroundColor = "yellow";
-  document.querySelector("#" + id3).style.backgroundColor = "yellow";
-}
+
+
+
+
 
 
