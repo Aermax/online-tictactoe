@@ -85,6 +85,9 @@ function startGame() {
   createBoard(vals);
   playerInput();
   playerTag.innerText = "X's Turn";
+  document.getElementById('formChat').classList.remove('hidden')
+  document.getElementById('messageWindow').classList.remove('hidden')
+
 }
 
 function startGameAI() {
@@ -520,10 +523,41 @@ function checkWinAI(allVals) {
 }
 
 
+///Chat
+
+document.getElementById('formChat').onsubmit = handleChatSubmit
+const chatInput = document.getElementById('chatInput')
+
+
+function handleChatSubmit(e) {
+  e.preventDefault()
+  socket.emit('messageSend', {
+    user: player,
+    content: chatInput.value
+  }, roomID)
+  chatInput.value = ""
+
+}
+
+socket.on('messages', message => {
+  const chat = document.createElement('p')
+  const avatar = document.createElement('p')
+
+  chat.innerHTML = `Player ${message.user}: ${message.content}`
+
+  const messageDiv = document.createElement('div')
+  messageDiv.classList.add('flex')
+  messageDiv.classList.add('justify-around')
+  messageDiv.classList.add('items-center')
+  messageDiv.classList.add('gap-2')
+
+
+  //messageDiv.appendChild(avatar)
+  messageDiv.appendChild(chat)
 
 
 
-
-
+  document.getElementById('messageWindow').prepend(messageDiv)
+})
 
 

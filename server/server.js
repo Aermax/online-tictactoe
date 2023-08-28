@@ -13,6 +13,7 @@ const io = new Server(server, {
 const rooms = []
 const randomRooms = []
 
+
 io.on('connection', (socket) => {
     //console.log('connected');
 
@@ -71,6 +72,10 @@ io.on('connection', (socket) => {
             //console.log("roomId: " + roomID)
         }
 
+    })
+
+    socket.on("messageSend", (message, roomId) => {
+        io.to(roomId).emit('messages', message)
     })
 
 });
